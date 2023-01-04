@@ -1,0 +1,21 @@
+program = {statement*}
+statement = {"(" ~ ((print|func_def|math|assign|if_statement|for_statement|while_statement|statement|func_call|const_statement|var) ~ ";"*)* ~ ")" }
+math = {(func_call|var|statement|const_statement|func_call) ~ op ~ (func_call|var|statement|const_statement)}
+var = {ASCII_ALPHA+}
+const_statement = {number|string|array|object|func_call|select}
+name = {ASCII_ALPHA+}
+string = {"\"" ~ ASCII_ALPHA+ ~ "\""}
+number = {ASCII_DIGIT+}
+op = { "+" | "-" | "*" | "/" | "^" | "%" | "==" | ">" | "<" | ">=" | "<=" | "!=" | "&&" | "||"}
+func_call = {name ~ "(" ~ ((math|var|statement|const_statement|func_call) ~ ","*)* ~ ")"}
+if_statement = {"if" ~ statement ~ statement ~ ("else" ~ statement)*}
+func_def = {"fn" ~ name ~ "[" ~ (name ~ ","*)* ~ "]" ~ statement}
+for_statement = {"for" ~ "|" ~ (name|var) ~ "|" ~ "in" ~ (statement|const_statement|var|func_call) ~ statement}
+while_statement = {"while" ~ statement ~ statement}
+object = {"{" ~ (object_object ~ ","*)* ~ "}"}
+array = {"[" ~ ((var|statement|const_statement|func_call) ~ ","*)* ~ "]"}
+assign = {var ~ "=" ~ (var|statement|const_statement|func_call|object_object)}
+print = {"print" ~ (var|statement|const_statement|func_call)}
+sep = _{":"}
+object_object = {(const_statement|var|statement) ~ sep ~ (const_statement|var|statement)}
+select = {"$" ~ (var|statement|const_statement|func_call) ~ "[" ~ (var|statement|const_statement|func_call) ~ "]"}
